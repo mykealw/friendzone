@@ -19,7 +19,7 @@ namespace friendzone.Controllers
             _fs = fs;
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Authorize]
         public async Task<ActionResult<Follow>> Create([FromBody] Follow follow)
         {
@@ -34,6 +34,22 @@ namespace friendzone.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult<Follow>>Delete(int id)
+        {
+           try
+           {
+               Profile profile = await HttpContext.GetUserInfoAsync<Profile>();
+               _fs.Delete(id, profile.Id);
+               return Ok();
+           }
+           catch(Exception e)
+           {
+               return BadRequest(e.Message);
+           }
         }
     }
 }
